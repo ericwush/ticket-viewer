@@ -34,10 +34,7 @@ public class ZendeskApiTest {
     // Then
     assertTrue(tryRequest.isSuccess());
     ZendeskRequest.Request request = tryRequest.get().getBody();
-    assertThat(request.getId(), is(3L));
-    assertThat(request.getSubject(), is("Test Ticket"));
-    assertThat(request.getDescription(), is("This is a test ticket"));
-    assertThat(request.getStatus(), is("open"));
+    assertRequest(request);
   }
 
   @Test
@@ -53,13 +50,17 @@ public class ZendeskApiTest {
     ZendeskRequest.Request[] requests = zendeskRequests.getRequests();
     assertThat(requests.length, is(1));
     ZendeskRequest.Request request = requests[0];
+    assertRequest(request);
+    assertThat(zendeskRequests.getCount(), is(1L));
+    assertNull(zendeskRequests.getNextPage());
+    assertNull(zendeskRequests.getPreviousPage());
+  }
+
+  private void assertRequest(final ZendeskRequest.Request request) {
     assertThat(request.getId(), is(3L));
     assertThat(request.getSubject(), is("Test Ticket"));
     assertThat(request.getDescription(), is("This is a test ticket"));
     assertThat(request.getStatus(), is("open"));
-    assertThat(zendeskRequests.getCount(), is(1L));
-    assertNull(zendeskRequests.getNextPage());
-    assertNull(zendeskRequests.getPreviousPage());
   }
 
 }

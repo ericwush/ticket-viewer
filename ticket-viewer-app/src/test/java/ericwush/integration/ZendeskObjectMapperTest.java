@@ -1,10 +1,12 @@
 package ericwush.integration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
@@ -29,6 +31,28 @@ public class ZendeskObjectMapperTest {
 
     // Then
     assertThat(deserializedDateTime, is(equalTo(expected)));
+  }
+
+  @Test
+  public void shouldSerializeValueWhenOptionalPresent() throws JsonProcessingException {
+    // Given
+
+    // When
+    String json = mapper.writeValueAsString(Optional.of("ABC"));
+
+    // Then
+    assertThat(json, is(equalTo("\"ABC\"")));
+  }
+
+  @Test
+  public void shouldSerializeNullWhenOptionalPresent() throws JsonProcessingException {
+    // Given
+
+    // When
+    String json = mapper.writeValueAsString(Optional.empty());
+
+    // Then
+    assertThat(json, is(equalTo("null")));
   }
 
 }

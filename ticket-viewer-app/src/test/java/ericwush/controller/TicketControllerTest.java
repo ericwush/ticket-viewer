@@ -1,10 +1,11 @@
 package ericwush.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ericwush.integration.ZendeskObjectMapper;
 import ericwush.model.Ticket;
+import ericwush.model.Tickets;
 import ericwush.service.TicketService;
 import javaslang.control.Try;
-import org.junit.Before;
+import org.assertj.core.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,15 +36,11 @@ public class TicketControllerTest {
   private MockMvc mvc;
   @MockBean
   private TicketService service;
-  private ObjectMapper objectMapper;
-
-  @Before
-  public void setUp() {
-    objectMapper = new ObjectMapper();
-  }
+  @Autowired
+  private ZendeskObjectMapper objectMapper;
 
   @Test
-  public void shouldReturnOkResponse() throws Exception {
+  public void getTicketShouldReturnOkResponse() throws Exception {
     // Given
     Ticket ticket = new Ticket(100L, "subject", "description", "open", LocalDateTime.now());
     when(service.getTicket(100L)).thenReturn(Try.success(ticket));
@@ -56,7 +54,7 @@ public class TicketControllerTest {
   }
 
   @Test
-  public void shouldReturnResponseForHttpStatusCodeException() throws Exception {
+  public void getTicketShouldReturnResponseForHttpStatusCodeException() throws Exception {
     // Given
     HttpStatusCodeException exception = new HttpClientErrorException(HttpStatus.NOT_FOUND, "RecordNotFound");
     when(service.getTicket(100L)).thenReturn(Try.failure(exception));
@@ -69,7 +67,7 @@ public class TicketControllerTest {
   }
 
   @Test
-  public void shouldReturnResponseForOtherException() throws Exception {
+  public void getTicketShouldReturnResponseForOtherException() throws Exception {
     // Given
     IllegalStateException exception = new IllegalStateException("connection refused");
     when(service.getTicket(100L)).thenReturn(Try.failure(exception));
@@ -78,6 +76,48 @@ public class TicketControllerTest {
 
     // Then
     mvc.perform(get("/api/tickets/100").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError()).andExpect(content().string("Zendesk connection refused"));
+  }
+
+  @Test
+  public void getTicketsShouldReturnOkResponseForTickets() throws Exception {
+    // Given
+    Ticket ticket = new Ticket(100L, "subject", "description", "open", LocalDateTime.now());
+    Tickets tickets = new Tickets(Arrays.array(ticket), Optional.of(2L), Optional.empty());
+    when(service.getTickets(1L)).thenReturn(Try.success(tickets));
+    String expected = objectMapper.writeValueAsString(tickets);
+
+    // When
+
+    // Then
+    mvc.perform(get("/api/tickets?page=1").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(content().string(expected));
+  }
+
+  @Test
+  public void getTicketsShouldReturnOkResponseWhenNoTicket() throws Exception {
+    // Given
+    Tickets tickets = new Tickets(new Ticket[0], Optional.empty(), Optional.empty());
+    when(service.getTickets(10L)).thenReturn(Try.success(tickets));
+    String expected = objectMapper.writeValueAsString(tickets);
+
+    // When
+
+    // Then
+    mvc.perform(get("/api/tickets?page=10").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andExpect(content().string(expected));
+  }
+
+  @Test
+  public void getTicketsShouldReturnResponseForOtherException() throws Exception {
+    // Given
+    IllegalStateException exception = new IllegalStateException("connection refused");
+    when(service.getTickets(1L)).thenReturn(Try.failure(exception));
+
+    // When
+
+    // Then
+    mvc.perform(get("/api/tickets?page=1").accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isInternalServerError()).andExpect(content().string("Zendesk connection refused"));
   }
 
