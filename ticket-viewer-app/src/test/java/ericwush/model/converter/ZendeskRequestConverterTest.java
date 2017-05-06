@@ -25,8 +25,8 @@ public class ZendeskRequestConverterTest {
     request.setStatus("Open");
     request.setSubject("Can't login");
     request.setUrl("http://someurl");
-    request.setCreatedAt(LocalDateTime.of(2017, 5, 1, 10, 00, 00));
-    request.setUpdatedAt(LocalDateTime.of(2017, 5, 1, 11, 10, 00));
+    request.setCreatedAt(LocalDateTime.of(2017, 5, 1, 10, 0, 0));
+    request.setUpdatedAt(LocalDateTime.of(2017, 5, 1, 11, 10, 0));
 
     // When
     Ticket ticket = converter.apply(request);
@@ -36,7 +36,7 @@ public class ZendeskRequestConverterTest {
     assertThat(ticket.getSubject(), is("Can't login"));
     assertThat(ticket.getDescription(), is("description"));
     assertThat(ticket.getStatus(), is("Open"));
-    assertThat(ticket.getUpdatedAt(), is(LocalDateTime.of(2017, 5, 1, 11, 10, 00)));
+    assertThat(ticket.getUpdatedAt(), is(LocalDateTime.of(2017, 5, 1, 11, 10, 0)));
   }
 
 }
