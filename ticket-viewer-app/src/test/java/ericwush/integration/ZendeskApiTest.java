@@ -40,7 +40,7 @@ public class ZendeskApiTest {
     assertThat(request.getStatus(), is("open"));
   }
 
-    @Test
+  @Test
   public void shouldGetRequests() {
     // Given
 

@@ -11,6 +11,7 @@ import static ericwush.helper.TestHelper.assertTicket;
 import static ericwush.helper.TestHelper.createZendeskRequest;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 
 public class ZendeskRequestsConverterTest {
 
@@ -39,7 +40,9 @@ public class ZendeskRequestsConverterTest {
     // Then
     assertThat(tickets.getTickets().length, is(1));
     assertTicket(tickets.getTickets()[0]);
+    assertTrue(tickets.getNextPage().isPresent());
     assertThat(tickets.getNextPage().get(), is(3L));
+    assertTrue(tickets.getPreviousPage().isPresent());
     assertThat(tickets.getPreviousPage().get(), is(1L));
   }
 

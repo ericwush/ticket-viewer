@@ -14,8 +14,8 @@ public class ZendeskApi {
     this.client = client;
   }
 
-  public Try<ZendeskRequest> getRequest(final long id) {
-    return client.get("/requests/{id}.json", ZendeskRequest.class, id);
+  public Try<ZendeskRequest> getRequest(final long requestId) {
+    return client.get("/requests/{id}.json", ZendeskRequest.class, requestId);
   }
 
   public Try<ZendeskRequests> getRequests(final long pageId) {
