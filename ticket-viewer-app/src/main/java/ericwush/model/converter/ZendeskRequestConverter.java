@@ -11,8 +11,8 @@ public class ZendeskRequestConverter implements Function<ZendeskRequest, Ticket>
 
   @Override
   public Ticket apply(final ZendeskRequest request) {
-    return new Ticket(request.getId(), request.getSubject(), request.getDescription(),
-        request.getStatus(), request.getUpdatedAt());
+    return new Ticket(request.getBody().getId(), request.getBody().getSubject(), request.getBody().getDescription(),
+        request.getBody().getStatus(), request.getBody().getUpdatedAt());
   }
 
 }

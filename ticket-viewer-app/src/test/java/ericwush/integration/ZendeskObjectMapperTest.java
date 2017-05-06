@@ -1,6 +1,5 @@
 package ericwush.integration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +22,6 @@ public class ZendeskObjectMapperTest {
   @Test
   public void shouldDeserializeLocalDateTime() throws IOException {
     // Given
-    mapper.disable(DeserializationFeature.UNWRAP_ROOT_VALUE);
     LocalDateTime expected = LocalDateTime.of(2017, 5, 4, 22, 54, 7, 0);
 
     // When
@@ -31,19 +29,6 @@ public class ZendeskObjectMapperTest {
 
     // Then
     assertThat(deserializedDateTime, is(equalTo(expected)));
-  }
-
-  @Test
-  public void shouldUnwrapRootValue() throws IOException {
-    // Given
-    TestObject expected = new TestObject();
-    expected.setValue("123");
-
-    // When
-    TestObject actual = mapper.readValue("{\"test\":{\"value\":\"123\"}}", TestObject.class);
-
-    // Then
-    assertThat(actual, is(equalTo(expected)));
   }
 
 }

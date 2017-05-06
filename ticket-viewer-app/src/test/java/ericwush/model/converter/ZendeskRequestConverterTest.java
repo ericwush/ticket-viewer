@@ -17,16 +17,18 @@ public class ZendeskRequestConverterTest {
     ZendeskRequestConverter converter = new ZendeskRequestConverter();
 
     ZendeskRequest request = new ZendeskRequest();
-    request.setId(100L);
-    request.setAssigneeId(1999L);
-    request.setOrganizationId(2000L);
-    request.setRequesterId(3000L);
-    request.setDescription("description");
-    request.setStatus("Open");
-    request.setSubject("Can't login");
-    request.setUrl("http://someurl");
-    request.setCreatedAt(LocalDateTime.of(2017, 5, 1, 10, 0, 0));
-    request.setUpdatedAt(LocalDateTime.of(2017, 5, 1, 11, 10, 0));
+    ZendeskRequest.Request body = new ZendeskRequest.Request();
+    body.setId(100L);
+    body.setAssigneeId(1999L);
+    body.setOrganizationId(2000L);
+    body.setRequesterId(3000L);
+    body.setDescription("description");
+    body.setStatus("Open");
+    body.setSubject("Can't login");
+    body.setUrl("http://someurl");
+    body.setCreatedAt(LocalDateTime.of(2017, 5, 1, 10, 00, 00));
+    body.setUpdatedAt(LocalDateTime.of(2017, 5, 1, 11, 10, 00));
+    request.setBody(body);
 
     // When
     Ticket ticket = converter.apply(request);

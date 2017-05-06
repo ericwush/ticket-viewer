@@ -31,7 +31,7 @@ public class ZendeskApiTest {
 
     // Then
     assertTrue(tryRequest.isSuccess());
-    ZendeskRequest request = tryRequest.get();
+    ZendeskRequest.Request request = tryRequest.get().getBody();
     assertThat(request.getId(), is(3L));
     assertThat(request.getSubject(), is("Test Ticket"));
     assertThat(request.getDescription(), is("This is a test ticket"));
