@@ -23,12 +23,11 @@ public class TicketServiceTest {
 
   @Mock
   private ZendeskApi api;
-  private ZendeskRequestConverter converter;
   private TicketService service;
 
   @Before
   public void setUp() {
-    converter = new ZendeskRequestConverter();
+    ZendeskRequestConverter converter = new ZendeskRequestConverter();
     service = new TicketService(api, converter);
   }
 
