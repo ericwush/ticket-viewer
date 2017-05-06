@@ -21,27 +21,27 @@ public class ZendeskRequest {
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Request {
-    private Long id;
+    private long id;
     private String url;
     private String status;
     private String subject;
     private String description;
     @JsonProperty("organization_id")
-    private Long organizationId;
+    private long organizationId;
     @JsonProperty("requester_id")
-    private Long requesterId;
+    private long requesterId;
     @JsonProperty("assignee_id")
-    private Long assigneeId;
+    private long assigneeId;
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
-    public Long getId() {
+    public long getId() {
       return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final long id) {
       this.id = id;
     }
 
@@ -93,27 +93,27 @@ public class ZendeskRequest {
       this.updatedAt = updatedAt;
     }
 
-    public Long getOrganizationId() {
+    public long getOrganizationId() {
       return organizationId;
     }
 
-    public void setOrganizationId(final Long organizationId) {
+    public void setOrganizationId(final long organizationId) {
       this.organizationId = organizationId;
     }
 
-    public Long getRequesterId() {
+    public long getRequesterId() {
       return requesterId;
     }
 
-    public void setRequesterId(final Long requesterId) {
+    public void setRequesterId(final long requesterId) {
       this.requesterId = requesterId;
     }
 
-    public Long getAssigneeId() {
+    public long getAssigneeId() {
       return assigneeId;
     }
 
-    public void setAssigneeId(final Long assigneeId) {
+    public void setAssigneeId(final long assigneeId) {
       this.assigneeId = assigneeId;
     }
   }
