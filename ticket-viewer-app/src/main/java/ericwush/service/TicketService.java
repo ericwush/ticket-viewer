@@ -18,7 +18,7 @@ public class TicketService {
   }
 
   public Try<Ticket> getTicket(final long id) {
-    return zendeskApi.getRequest(id).map(requestConverter);
+    return zendeskApi.getRequest(id).map(zendeskRequest -> requestConverter.apply(zendeskRequest.getBody()));
   }
 
 }

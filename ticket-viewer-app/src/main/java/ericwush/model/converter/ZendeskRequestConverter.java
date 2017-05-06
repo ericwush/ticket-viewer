@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class ZendeskRequestConverter implements Function<ZendeskRequest, Ticket> {
+public class ZendeskRequestConverter implements Function<ZendeskRequest.Request, Ticket> {
 
   @Override
-  public Ticket apply(final ZendeskRequest request) {
-    return new Ticket(request.getBody().getId(), request.getBody().getSubject(), request.getBody().getDescription(),
-        request.getBody().getStatus(), request.getBody().getUpdatedAt());
+  public Ticket apply(final ZendeskRequest.Request request) {
+    return new Ticket(request.getId(), request.getSubject(), request.getDescription(), request.getStatus(),
+        request.getUpdatedAt());
   }
 
 }
