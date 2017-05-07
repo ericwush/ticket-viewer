@@ -3,9 +3,11 @@ package ericwush.controller;
 import ericwush.integration.ZendeskObjectMapper;
 import ericwush.model.Ticket;
 import ericwush.model.Tickets;
+import ericwush.security.TokenAuthenticationService;
 import ericwush.service.TicketService;
 import javaslang.control.Try;
 import org.assertj.core.util.Arrays;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +34,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class TicketControllerTest {
 
+  private static String token;
   @Autowired
   private MockMvc mvc;
   @MockBean
   private TicketService service;
   @Autowired
   private ZendeskObjectMapper objectMapper;
+
+  @BeforeClass
+  public static void setUp() {
+    TokenAuthenticationService tokenService = new TokenAuthenticationService();
+    tokenService.setSecret("AwesomeZendesk");
+    tokenService.setExpirationTime(60 * 60 * 1000);
+    token = TokenAuthenticationService.createToken("user1");
+  }
 
   @Test
   public void getTicketShouldReturnOkResponse() throws Exception {
@@ -49,8 +60,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets/100").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()).andExpect(content().string(expected));
+    mvc.perform(get("/api/tickets/100")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string(expected));
   }
 
   @Test
@@ -62,8 +76,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets/100").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound()).andExpect(content().string("Zendesk 404 RecordNotFound"));
+    mvc.perform(get("/api/tickets/100")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound())
+        .andExpect(content().string("Zendesk 404 RecordNotFound"));
   }
 
   @Test
@@ -75,8 +92,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets/100").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isInternalServerError()).andExpect(content().string("Zendesk connection refused"));
+    mvc.perform(get("/api/tickets/100")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("Zendesk connection refused"));
   }
 
   @Test
@@ -90,8 +110,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets?page=1").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()).andExpect(content().string(expected));
+    mvc.perform(get("/api/tickets?page=1")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string(expected));
   }
 
   @Test
@@ -104,8 +127,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets?page=10").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()).andExpect(content().string(expected));
+    mvc.perform(get("/api/tickets?page=10")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().string(expected));
   }
 
   @Test
@@ -117,8 +143,11 @@ public class TicketControllerTest {
     // When
 
     // Then
-    mvc.perform(get("/api/tickets?page=1").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isInternalServerError()).andExpect(content().string("Zendesk connection refused"));
+    mvc.perform(get("/api/tickets?page=1")
+        .header("Authorization", token)
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string("Zendesk connection refused"));
   }
 
 }
