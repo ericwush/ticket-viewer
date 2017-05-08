@@ -30,6 +30,7 @@ public class TokenAuthenticationService {
   public static Optional<Authentication> getAuthentication(final String token) {
     try {
       return Optional.ofNullable(token)
+          .filter(t -> !t.isEmpty())
           .map(t ->
               Jwts.parser()
                   .setSigningKey(SECRET)
