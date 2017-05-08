@@ -6,6 +6,7 @@ import ericwush.service.TicketService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,12 +23,12 @@ public class TicketController {
     this.responseMapper = responseMapper;
   }
 
-  @RequestMapping("/tickets/{ticketId}")
+  @RequestMapping(value = "/tickets/{ticketId}", method = RequestMethod.GET, produces = {"application/json"})
   public ResponseEntity<Ticket> getTicket(@PathVariable long ticketId) {
     return (ResponseEntity<Ticket>) responseMapper.apply(ticketService.getTicket(ticketId));
   }
 
-  @RequestMapping("/tickets")
+  @RequestMapping(value = "/tickets", method = RequestMethod.GET, produces = {"application/json"})
   public ResponseEntity<Tickets> getTickets(@RequestParam long page) {
     return (ResponseEntity<Tickets>) responseMapper.apply(ticketService.getTickets(page));
   }

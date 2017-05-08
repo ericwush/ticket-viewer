@@ -1,5 +1,6 @@
 package ericwush.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,14 +28,18 @@ public class TokenAuthenticationService {
   }
 
   public static Optional<Authentication> getAuthentication(final String token) {
-    return Optional.ofNullable(token)
-        .map(t ->
-          Jwts.parser()
-            .setSigningKey(SECRET)
-            .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-            .getBody()
-            .getSubject())
-        .map(user -> new UsernamePasswordAuthenticationToken(user, null, emptyList()));
+    try {
+      return Optional.ofNullable(token)
+          .map(t ->
+              Jwts.parser()
+                  .setSigningKey(SECRET)
+                  .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                  .getBody()
+                  .getSubject())
+          .map(user -> new UsernamePasswordAuthenticationToken(user, null, emptyList()));
+    } catch (ExpiredJwtException e) {
+      return Optional.empty();
+    }
   }
 
   @Value("${jwt.secret}")

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -32,6 +33,19 @@ public class TokenAuthenticationServiceTest {
     // Then
     assertTrue(maybeAuth.isPresent());
     assertThat(maybeAuth.get().getPrincipal(), is("user1"));
+  }
+
+  @Test
+  public void shouldReturnEmptyAuthenticationWhenTokenExpired() {
+    // Given
+    service.setExpirationTime(1);
+    String token = TokenAuthenticationService.createToken("user1");
+
+    // When
+    Optional<Authentication> maybeAuth = TokenAuthenticationService.getAuthentication(token);
+
+    // Then
+    assertFalse(maybeAuth.isPresent());
   }
 
 }

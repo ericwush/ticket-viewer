@@ -43,6 +43,8 @@ Whether the computation was successful or not can then be inspected by choice at
 JWT token is used to secure all API calls.
 
 ### Test
+* Login
+
 User must login via `http://localhost:8080/login` via `POST` below body
 ```
 {"username":"admin","password":"password"}
@@ -51,3 +53,11 @@ User must login via `http://localhost:8080/login` via `POST` below body
 A token will be issued after successful login. It needs to be provided via `Authorization` header for all API calls. 
 
 Token expiration is currently set to an hour.
+
+* Single ticket
+
+Client can call REST endpoint `http://localhost:8080/api/tickets/{ticket_id}` via `GET` with `Authorization` header set with token issued by `Login`. The return body is produced in `application/json`.
+
+* List tickets (100 per page)
+
+Client can call REST endpoint `http://localhost:8080/api/tickets?page={page_number}` via `GET` with `Authorization` header set with token issued by `Login`. The return body is produced in `application/json`.
