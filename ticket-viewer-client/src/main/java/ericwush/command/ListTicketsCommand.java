@@ -5,6 +5,7 @@ import ericwush.client.Tickets;
 import javaslang.control.Try;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.Arrays;
@@ -45,19 +46,10 @@ public class ListTicketsCommand implements InteractiveCommand {
   @Override
   public void execute(final CommandLineListener listener) {
     Try<Tickets> maybeTickets = client.listTickets(getPageNumber(), listener.getToken());
-    Tickets tickets = maybeTickets.getOrElseThrow(e -> {
-      if (e instanceof HttpClientErrorException &&
-          ((HttpClientErrorException) e).getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-        return new IllegalStateException("invalid/expired token, please login");
-      } else if (e instanceof ResourceAccessException) {
-        return new IllegalStateException("could not connect to server. Has server started?");
-      }
-      System.out.println(e.getClass().getName());
-      System.out.println(e.getMessage());
-      return new IllegalStateException("unknown error");
-    });
+    Tickets tickets = maybeTickets.getOrElseThrow(parseException());
     Arrays.stream(tickets.getTickets()).forEach(System.out::println);
     tickets.getPreviousPage().ifPresent(page -> System.out.println("previous page: " + page));
     tickets.getNextPage().ifPresent(page -> System.out.println("next page: " + page));
   }
+
 }

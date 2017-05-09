@@ -3,9 +3,6 @@ package ericwush.command;
 import ericwush.client.Ticket;
 import ericwush.client.TicketViewerClient;
 import javaslang.control.Try;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.util.NoSuchElementException;
 import java.util.Observable;
@@ -44,17 +41,8 @@ public class GetTicketCommand implements InteractiveCommand {
   @Override
   public void execute(final CommandLineListener listener) {
     Try<Ticket> maybeTicket = client.getTicket(getTicketId(), listener.getToken());
-    Ticket ticket = maybeTicket.getOrElseThrow(e -> {
-      if (e instanceof HttpClientErrorException &&
-          ((HttpClientErrorException) e).getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-        return new IllegalStateException("invalid/expired token, please login");
-      } else if (e instanceof ResourceAccessException) {
-        return new IllegalStateException("could not connect to server. Has server started?");
-      }
-      System.out.println(e.getClass().getName());
-      System.out.println(e.getMessage());
-      return new IllegalStateException("unknown error");
-    });
+    Ticket ticket = maybeTicket.getOrElseThrow(parseException());
     System.out.println(ticket);
   }
+
 }
