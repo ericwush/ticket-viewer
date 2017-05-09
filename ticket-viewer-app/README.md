@@ -20,6 +20,12 @@ $ gradlew.bat bootRun
 It might take some moments to resolve the dependencies for the first time.
 
 ### User
+Default user
+```
+Username: admin
+Password: password
+```
+
 
 ### Framework/libs used
 #### Spring Boot
